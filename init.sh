@@ -50,8 +50,9 @@ if [ -d "$daemon_dir" ]; then
 	do
 		cp $file $daemon_dir
 		systemctl enable $file
+		systemctl daemon-reload
+		systemctl start $file
 	done
-	systemctl daemon-reload
 else
 	echo "dp::euterpe::systemd::(error)::this os systemd dir might be different."
 	exit 1;
