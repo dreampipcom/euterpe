@@ -32,6 +32,16 @@ do
 done
 cd $root_dir
 
+# copy files
+mnt_dir=/mnt/audio-archive
+if [ -d "$mnt_dir" ]; then
+	echo "dp::euterpe::(busy)::copying configs to mnt."
+	cp ez/_*.conf $mnt_dir
+else
+	echo "dp::euterpe::(error)::audio-archive is not mounted."
+	exit 1;
+fi
+
 # legacy sed, use if daemons are enabled already
 # sed -i ./icecast/default.conf s/EUTERPE_USER/$EUTERPE_USER/g
 # sed -i ./icecast/default.conf s/EUTERPE_PASSWORD/$EUTERPE_PASSWORD/g

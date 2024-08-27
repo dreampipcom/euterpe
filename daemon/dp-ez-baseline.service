@@ -1,0 +1,20 @@
+# /etc/systemd/system/dp-ez-baseline.service
+
+[Unit]
+Description=DreamPip EZ Service Baseline Node
+Requires=dp-icy.service
+After=dp-icy.service
+
+[Service]
+User=root
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=/mnt/audio-archive
+ExecStart=/usr/bin/ezstream -c _jingle.conf && echo "dp::euterpe::ez::base::(active)::DreamPip Baseline EZ Service Started"
+ExecStop= echo "dp::euterpe::ez::base::(stopped)::DreamPip Baseline EZ Service Stopped"
+TimeoutStartSec=90
+Restart=always
+StartLimitIntervalSec=60
+StartLimitBurst=3
+[Install]
+WantedBy=multi-user.target
