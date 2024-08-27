@@ -1,19 +1,17 @@
 # /etc/systemd/system/dp-ez-base.service
 
 [Unit]
-Description=EZ Service Base
+Description=DreamPip EZ Service Base Node
 Requires=dp-icy.service
-# Requires=dp-gcsfuse.service
 After=dp-icy.service
-# After=dp-gcsfuse.service
 
 [Service]
 User=root
 Type=simple
 RemainAfterExit=yes
 WorkingDirectory=/mnt/audio-archive
-ExecStart=/usr/bin/ezstream -c ez-base.conf
-ExecStop=echo "ez base server stopped..."
+ExecStart=/usr/bin/ezstream -c ez-base.conf && echo "dp::euterpe::ez::base::(active)::DreamPip Base EZ Service Started"
+ExecStop= echo "dp::euterpe::ez::base::(stopped)::DreamPip Base EZ Service Started"
 TimeoutStartSec=90
 Restart=always
 StartLimitIntervalSec=60

@@ -1,7 +1,7 @@
-# /etc/systemd/system/audio-archive.service
+# /etc/systemd/system/dp-audio-archive.service
 
 [Unit]
-Description=Audio Archive Service
+Description=DreamPip Audio Archive Service
 Requires=network.target
 After=network.target
 
@@ -10,8 +10,8 @@ User=root
 Type=notify
 RemainAfterExit=yes
 WorkingDirectory=/root
-ExecStart=/usr/bin/rclone --gcs-bucket-policy-only mount --allow-non-empty --vfs-cache-max-age 8h --vfs-cache-mode writes --vfs-cache-max-size 1G --vfs-cache-poll-interval 5m audio-archive:purizu-audio-archive /mnt/audio-archive
-ExecStop=/usr/bin/fusermount -u /mnt/audio-archive
+ExecStart=/usr/bin/rclone --gcs-bucket-policy-only mount --allow-non-empty --vfs-cache-max-age 8h --vfs-cache-mode writes --vfs-cache-max-size 1G --vfs-cache-poll-interval 5m audio-archive:purizu-audio-archive /mnt/audio-archive && echo "dp::euterpe::audio-archive::(active)::DreamPip Audio Archive Service Started"
+ExecStop=/usr/bin/fusermount -u /mnt/audio-archive  && echo "dp::euterpe::audio-archive::(stopped)::DreamPip Audio Archive Service Stopped"
 TimeoutStartSec=1
 Restart=always
 RestartSec=10

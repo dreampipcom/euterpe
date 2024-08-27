@@ -1,17 +1,17 @@
 # /etc/systemd/system/dp-icy.service
 
 [Unit]
-Description=Icecast Service
-#Requires=dp-gcsfuse.service
-#After=dp-gcsfuse.service
+Description=DreamPip Icecast Server
+Requires=dp-audio-archive.service
+After=dp-audio-archive.service
 
 [Service]
 User=root
 Type=simple
 RemainAfterExit=yes
-WorkingDirectory=/root/dp/nexus-icecast
-ExecStart=/usr/bin/icecast2 -c default.conf
-ExecStop=echo "server stopped..."
+WorkingDirectory=/root/euterpe/icecast
+ExecStart=/usr/bin/icecast2 -c default.conf && echo "dp::euterpe::(active)::DreamPip Icecast Server Started"
+ExecStop=echo "dp::euterpe::(stopped)::DreamPip Icecast Server Stopped"
 TimeoutStartSec=0
 Restart=always
 StartLimitIntervalSec=60

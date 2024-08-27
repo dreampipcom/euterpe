@@ -1,21 +1,17 @@
-# /etc/systemd/system/dp-ez.service
+# /etc/systemd/system/dp-ez-rotation.service
 
 [Unit]
-Description=EZ Service 00
-Requires=dp-icy.service
+Description=DreamPip EZ Service Rotation Node
 Requires=dp-ez-base.service
-# Requires=dp-gcsfuse.service
-After=dp-icy.service
 After=dp-ez-base.service
-# After=dp-gcsfuse.service
 
 [Service]
 User=root
 Type=simple
 RemainAfterExit=yes
 WorkingDirectory=/mnt/audio-archive
-ExecStart=/usr/bin/ezstream -r -c ez.conf
-ExecStop=echo "ez server stopped..."
+ExecStart=/usr/bin/ezstream -r -c ez.conf && echo "dp::euterpe::ez::main::(active)::DreamPip Rotation EZ Service Started"
+ExecStop=echo "dp::euterpe::ez::main::(stopped)::DreamPip Rotation EZ Service Stopped"
 TimeoutStartSec=90
 Restart=always
 StartLimitIntervalSec=60

@@ -35,10 +35,10 @@
 ### settings
 
 # icecast status URL
-URL='127.0.0.7:8002/status-json.xsl?mount=/main'
+URL='127.0.0.7:EUTERPE_PORT/status-json.xsl?mount=/EUTERPE_MNT_MAIN'
 
 # filename of stream
-TEXTTOSEARCH='main'
+TEXTTOSEARCH='EUTERPE_MNT_MAIN'
 
 # timeout
 TIMEOUT=10
@@ -54,21 +54,23 @@ CURL=`which curl`
 
 ## endof settings
 
-
-
 DATE=$(date)
 
 CUR=$($CURL --connect-timeout ${TIMEOUT} --max-time ${TIMEOUT} -3 --silent ${URL}) 
 TEST="$(echo $CUR | grep ${TEXTTOSEARCH})"
 # If not zero, server is OK 
 if [[ ! $TEST == "" ]]; then 
-	echo $DATE "- stream is OK" >> $LOGFILE; 
+	echo $DATE "dp::euterpe::all::(normal)::stream is OK" >> $LOGFILE; 
 else
-	echo $DATE "- stream down - restart" >> $LOGFILE;
+	echo $DATE "dp::euterpe::all::(degraded)::stream down" >> $LOGFILE;
 	#restart dp:euterpe
-	service remo-icy stop
-	service remo-ez stop
+	service dp-ez-rotation stop
+	service dp-ez-base stop
+	service dp-icy stop
+	service dp-audio-archive stop
 	sleep $SLEEP
-	service remo-icy start
-	service remo-ez start
+	service dp-audio-archive start
+	service dp-icy start
+	service dp-ez-base start
+	service dp-ez-rotation start
 fi
