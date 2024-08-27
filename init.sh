@@ -83,9 +83,21 @@ else
 	exit 1;
 fi
 
+firewall_dir="/etc/fail2ban"
+if [ -d "$firewall_dir" ]; then
+	echo "dp::euterpe::firewall::(busy)::copying configs to fail2ban."
+	cd firewall
+	cp jail.local "$firewall_dir/jail.d"
+	cp *.conf "$firewall_dir/filter.d"
+else
+	echo "dp::euterpe::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
+	exit 1;
+fi
+cd $root_dir
+
 daemon_dir="/etc/systemd/system"
 if [ -d "$daemon_dir" ]; then
-	echo "dp::euterpe::systemd::(busy)::copying configs to mnt."
+	echo "dp::euterpe::systemd::(busy)::copying daemons to systemd."
 	cd $daemon_dir
 	for file in *.conf
 	do
@@ -99,19 +111,6 @@ else
 	exit 1;
 fi
 cd $root_dir
-
-firewall_dir="/etc/fail2ban"
-if [ -d "$firewall_dir" ]; then
-	echo "dp::euterpe::firewall::(busy)::copying configs to fail2ban."
-	cd firewall
-	cp jail.local "$firewall_dir/jail.d"
-	cp *.conf "$firewall_dir/filter.d"
-else
-	echo "dp::euterpe::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
-	exit 1;
-fi
-cd $root_dir
-
 
 # make a playlist
 echo "dp::euterpe::vibes::(busy)::making a playlist."
