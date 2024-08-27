@@ -58,6 +58,15 @@ else
 	exit 1;
 fi
 
+echo "dp::euterpe::firewall::(busy)::preparing DreamWAF."
+if [ "$(which fail2ban)" == "" ]; then
+	echo "dp::euterpe::firewall::(busy)::installing fail2ban."
+	apt update
+	apt install fail2ban
+else
+	echo "dp::euterpe::systemd::(skip)::skipping fail2ban installation."
+fi
+
 # legacy sed, use if daemons are enabled already
 # sed -i ./icecast/default.conf s/EUTERPE_USER/$EUTERPE_USER/g
 # sed -i ./icecast/default.conf s/EUTERPE_PASSWORD/$EUTERPE_PASSWORD/g
