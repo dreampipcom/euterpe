@@ -100,14 +100,12 @@ else
 fi
 cd $root_dir
 
-firewall_dir="/etc/systemd/system"
+firewall_dir="/etc/fail2ban"
 if [ -d "$firewall_dir" ]; then
 	echo "dp::euterpe::firewall::(busy)::copying configs to fail2ban."
 	cd firewall
-	for file in *.conf
-	do
-		cp $file $firewall_dir
-	done
+	cp jail.local "$firewall_dir/jail.d"
+	cp *.conf "$firewall_dir/filter.d"
 else
 	echo "dp::euterpe::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
 	exit 1;
