@@ -1,0 +1,101 @@
+[nginx-http-auth]
+enabled = true
+action = route
+filter = nginx-http-auth
+port    = http,https,EUTERPE_PORT
+logpath = /var/log/nginx/access.log
+
+[nginx-botsearch]
+
+action = route
+port     = http,https,EUTERPE_PORT
+logpath  = /var/log/nginx/access.log
+maxretry = 2
+
+[nginx-noscript]
+
+enabled  = true
+action = route
+	 cloudflare
+port     = http,https,EUTERPE_PORT
+filter   = nginx-noscript
+logpath  = /var/log/nginx/access.log
+maxretry = 9
+
+[nginx-noscript-post]
+
+enabled  = true
+action = route
+	 cloudflare
+port     = http,https,EUTERPE_PORT
+filter   = nginx-noscript-post
+logpath  = /var/log/nginx/access.log
+maxretry = 9
+
+
+[nginx-badbots]
+
+enabled  = true
+action = route
+port     = http,https,EUTERPE_PORT
+filter   = nginx-badbots
+logpath  = /var/log/nginx/access.log
+maxretry = 2
+
+[nginx-nohome]
+
+enabled  = true
+action = route
+port     = http,https,EUTERPE_PORT
+filter   = nginx-nohome
+logpath  = /var/log/nginx/access.log
+maxretry = 2
+
+[nginx-noproxy]
+
+enabled  = true
+action = route
+port     = http,https,EUTERPE_PORT
+filter   = nginx-noproxy
+logpath  = /var/log/nginx/access.log
+maxretry = 2
+
+[nginx-req-limit]
+enabled = true
+filter = nginx-req-limit
+port     = http,https,EUTERPE_PORT
+action = route
+logpath = /var/log/nginx/access.log
+findtime = 300
+bantime = 7200
+maxretry = 5
+
+[nginx-conn-limit]
+enabled = true
+filter = nginx-conn-limit
+port     = http,https,EUTERPE_PORT
+action = route
+logpath = /var/log/nginx/access.log
+findtime = 300
+bantime = 7200
+maxretry = 5
+
+[dp-patience]
+enabled = true
+filter = dp-patience
+port     = EUTERPE_PORT
+action = route
+logpath = EUTERPE_ACCESS_LOG_PATH/access.log
+findtime = EUTERPE_PATIENCE_MEMORY
+bantime = EUTERPE_PATIENCE_LINGER 
+maxretry = EUTERPE_PATIENCE_TOLERATION
+
+[nginx-xmlrpc]
+enabled = true
+filter = nginx-xmlrpc
+port     = http,https,EUTERPE_PORT
+action = route
+logpath = /var/log/nginx/access.log
+maxretry = 3
+findtime = 10800
+bantime = 86400
