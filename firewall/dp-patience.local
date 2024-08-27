@@ -6,14 +6,12 @@ port    = http,https,EUTERPE_PORT
 logpath = /var/log/nginx/access.log
 
 [nginx-botsearch]
-
 action = route
 port     = http,https,EUTERPE_PORT
 logpath  = /var/log/nginx/access.log
 maxretry = 2
 
 [nginx-noscript]
-
 enabled  = true
 action = route
 	 cloudflare
@@ -23,7 +21,6 @@ logpath  = /var/log/nginx/access.log
 maxretry = 9
 
 [nginx-noscript-post]
-
 enabled  = true
 action = route
 	 cloudflare
@@ -32,9 +29,7 @@ filter   = nginx-noscript-post
 logpath  = /var/log/nginx/access.log
 maxretry = 9
 
-
 [nginx-badbots]
-
 enabled  = true
 action = route
 port     = http,https,EUTERPE_PORT
@@ -43,7 +38,6 @@ logpath  = /var/log/nginx/access.log
 maxretry = 2
 
 [nginx-nohome]
-
 enabled  = true
 action = route
 port     = http,https,EUTERPE_PORT
@@ -52,7 +46,6 @@ logpath  = /var/log/nginx/access.log
 maxretry = 2
 
 [nginx-noproxy]
-
 enabled  = true
 action = route
 port     = http,https,EUTERPE_PORT
