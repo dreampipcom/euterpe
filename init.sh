@@ -5,8 +5,36 @@ set -a && source .env && set +a
 
 root_dir="$(pwd)"
 
+# install deps
+echo "dp::euterpe::firewall::(busy)::preparing DreamWAF."
+if [ "$(which fail2ban)" == "" ]; then
+	echo "dp::euterpe::firewall::(busy)::installing fail2ban."
+	apt update
+	apt install fail2ban
+else
+	echo "dp::euterpe::firewall::(skip)::skipping fail2ban installation."
+fi
+
+echo "dp::euterpe::icecast::(busy)::preparing Icecast."
+if [ "$(which icecast2)" == "" ]; then
+	echo "dp::euterpe::firewall::(busy)::installing Icecast."
+	apt update
+	apt install icecast2
+else
+	echo "dp::euterpe::icecast::(skip)::skipping Icecast installation."
+fi
+
+echo "dp::euterpe::ez::(busy)::preparing EZ."
+if [ "$(which ezstream)" == "" ]; then
+	echo "dp::euterpe::firewall::(busy)::installing EZ Stream."
+	apt update
+	apt install ezstream
+else
+	echo "dp::euterpe::icecast::(skip)::skipping EZ Stream installation."
+fi
+
 # prepare configs
-echo "dp::euterpe::(busy)::preparing Euterpe Icecast configuration files."
+echo "dp::euterpe::icecast::(busy)::preparing Euterpe Icecast configuration files."
 cd icecast
 rm _*.conf
 for file in *.conf
@@ -19,8 +47,21 @@ do
 done
 cd $root_dir
 
-echo "dp::euterpe::(busy)::preparing Euterpe EZ configuration files."
+echo "dp::euterpe::ez::(busy)::preparing Euterpe EZ configuration files."
 cd ez
+rm _*.conf
+for file in *.conf
+do
+	origin="$file"
+	destination="_$file"
+	tmpfile=$(mktemp)
+  cp -p $origin $tmpfile
+	cat $origin | envsubst > $tmpfile && mv $tmpfile $destination
+done
+cd $root_dir
+
+echo "dp::euterpe::firewall::(busy)::preparing DreamWAF configuration files."
+cd firewall
 rm _*.conf
 for file in *.conf
 do
@@ -45,7 +86,7 @@ fi
 daemon_dir="/etc/systemd/system"
 if [ -d "$daemon_dir" ]; then
 	echo "dp::euterpe::systemd::(busy)::copying configs to mnt."
-	cd daemon_dir
+	cd $daemon_dir
 	for file in *.conf
 	do
 		cp $file $daemon_dir
@@ -57,15 +98,29 @@ else
 	echo "dp::euterpe::systemd::(error)::this os systemd dir might be different."
 	exit 1;
 fi
+cd $root_dir
 
-echo "dp::euterpe::firewall::(busy)::preparing DreamWAF."
-if [ "$(which fail2ban)" == "" ]; then
-	echo "dp::euterpe::firewall::(busy)::installing fail2ban."
-	apt update
-	apt install fail2ban
+firewall_dir="/etc/systemd/system"
+if [ -d "$firewall_dir" ]; then
+	echo "dp::euterpe::firewall::(busy)::copying configs to fail2ban."
+	cd firewall
+	for file in *.conf
+	do
+		cp $file $firewall_dir
+	done
 else
-	echo "dp::euterpe::firewall::(skip)::skipping fail2ban installation."
+	echo "dp::euterpe::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
+	exit 1;
 fi
+cd $root_dir
+
+
+# make a playlist
+echo "dp::euterpe::vibes::(busy)::making a playlist."
+cp static/* $mnt_dir
+cd $mnt_dir
+find -type f -iname "*.mp3" -or -iname "*.flac" -or -iname "*.m4a" > playlist.m3u
+cd $root_dir
 
 # legacy sed, use if daemons are enabled already
 # sed -i ./icecast/default.conf s/EUTERPE_USER/$EUTERPE_USER/g
