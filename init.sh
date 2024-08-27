@@ -1,7 +1,6 @@
 #!/bin/bash
 # init.sh
 echo -e "\033[0;62m\033[0;49;35m"
-
 set -a && source .env && set +a
 
 root_dir="$(pwd)"
@@ -25,7 +24,6 @@ cd ez
 rm _*.conf
 for file in *.conf
 do
-	source ../.env
 	origin="$file"
 	destination="_$file"
 	tmpfile=$(mktemp)
