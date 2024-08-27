@@ -33,12 +33,27 @@ done
 cd $root_dir
 
 # copy files
-mnt_dir=/mnt/audio-archive
+mnt_dir="/mnt/audio-archive"
 if [ -d "$mnt_dir" ]; then
-	echo "dp::euterpe::(busy)::copying configs to mnt."
+	echo "dp::euterpe::ez::(busy)::copying configs to mnt."
 	cp ez/_*.conf $mnt_dir
 else
-	echo "dp::euterpe::(error)::audio-archive is not mounted."
+	echo "dp::euterpe::ez::(error)::audio-archive is not mounted."
+	exit 1;
+fi
+
+daemon_dir="/etc/systemd/system"
+if [ -d "$daemon_dir" ]; then
+	echo "dp::euterpe::systemd::(busy)::copying configs to mnt."
+	cd daemon_dir
+	for file in *.conf
+	do
+		cp $file $daemon_dir
+		systemctl enable $file
+	done
+	systemctl daemon-reload
+else
+	echo "dp::euterpe::systemd::(error)::this os systemd dir might be different."
 	exit 1;
 fi
 
