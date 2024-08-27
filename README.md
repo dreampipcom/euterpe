@@ -1,6 +1,6 @@
 # Euterpe - DreamPip's Audio Broadcast Platform
 
-What: Icecast.
+What: Icecast, Nginx, fail2ban, gcs-fuse, ezstream, systemctl.
 
 ## Getting Started
 
