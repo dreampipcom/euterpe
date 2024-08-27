@@ -116,6 +116,7 @@ cd $root_dir
 echo "dp::euterpe::vibes::(busy)::making a playlist."
 cp static/* $mnt_dir
 cd $mnt_dir
+find -type f -iname "jingle.mp3" > playlist-base.m3u
 find -type f -iname "*.mp3" -or -iname "*.flac" -or -iname "*.m4a" > playlist.m3u
 cd $root_dir
 
