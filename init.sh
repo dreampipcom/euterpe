@@ -5,9 +5,8 @@ set -a && source .env && set +a
 
 root_dir="$(pwd)"
 
-# prepare config
+# prepare configs
 echo "dp::euterpe::(busy)::preparing Euterpe Icecast configuration files."
-
 cd icecast
 rm _*.conf
 for file in *.conf
@@ -20,6 +19,7 @@ do
 done
 cd $root_dir
 
+echo "dp::euterpe::(busy)::preparing Euterpe EZ configuration files."
 cd ez
 rm _*.conf
 for file in *.conf
