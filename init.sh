@@ -64,7 +64,7 @@ if [ "$(which fail2ban)" == "" ]; then
 	apt update
 	apt install fail2ban
 else
-	echo "dp::euterpe::systemd::(skip)::skipping fail2ban installation."
+	echo "dp::euterpe::firewall::(skip)::skipping fail2ban installation."
 fi
 
 # legacy sed, use if daemons are enabled already
