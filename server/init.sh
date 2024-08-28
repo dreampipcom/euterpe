@@ -34,6 +34,17 @@ else
 	echo "dp::euterpe::server::icecast::(skip)::skipping EZ Stream installation."
 fi
 
+# prepare daemons
+echo "dp::euterpe::server::gcp-fuse::(busy)::preparing GCP Fuse."
+cd daemon
+rm _*.service
+origin="dp-audio-archive.service.template"
+destination="_dp-audio-archive.service"
+tmpfile=$(mktemp)
+cp -p $origin $tmpfile
+cat $origin | envsubst > $tmpfile && mv $tmpfile $destination
+cd $root_dir
+
 # prepare configs
 echo "dp::euterpe::server::icecast::(busy)::preparing Euterpe Icecast configuration files."
 cd icecast
