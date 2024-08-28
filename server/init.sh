@@ -43,7 +43,7 @@ if [ "$(which /usr/bin/rclone)" == "" ]; then
 	apt update
 	apt install gcsfuse
 else
-	echo "dp::euterpe::server::icecast::(skip)::skipping EZ Stream installation."
+	echo "dp::euterpe::server::icecast::(skip)::skipping GCP Fuse installation."
 fi
 
 # prepare daemons
