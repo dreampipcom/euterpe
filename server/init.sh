@@ -1,40 +1,41 @@
 #!/bin/bash
 # init.sh
 echo -e "\033[0;62m\033[0;49;35m"
+cp ../.env ./env
 set -a && source .env && set +a
 
 root_dir="$(pwd)"
 
 # install deps
-echo "dp::euterpe::firewall::(busy)::preparing DreamWAF."
+echo "dp::euterpe::server::firewall::(busy)::preparing DreamWAF."
 if [ "$(which fail2ban)" == "" ]; then
-	echo "dp::euterpe::firewall::(busy)::installing fail2ban."
+	echo "dp::euterpe::server::firewall::(busy)::installing fail2ban."
 	apt update
 	apt install fail2ban
 else
-	echo "dp::euterpe::firewall::(skip)::skipping fail2ban installation."
+	echo "dp::euterpe::server::firewall::(skip)::skipping fail2ban installation."
 fi
 
-echo "dp::euterpe::icecast::(busy)::preparing Icecast."
+echo "dp::euterpe::server::icecast::(busy)::preparing Icecast."
 if [ "$(which icecast2)" == "" ]; then
-	echo "dp::euterpe::firewall::(busy)::installing Icecast."
+	echo "dp::euterpe::server::firewall::(busy)::installing Icecast."
 	apt update
 	apt install icecast2
 else
-	echo "dp::euterpe::icecast::(skip)::skipping Icecast installation."
+	echo "dp::euterpe::server::icecast::(skip)::skipping Icecast installation."
 fi
 
-echo "dp::euterpe::ez::(busy)::preparing EZ."
+echo "dp::euterpe::server::ez::(busy)::preparing EZ."
 if [ "$(which ezstream)" == "" ]; then
-	echo "dp::euterpe::firewall::(busy)::installing EZ Stream."
+	echo "dp::euterpe::server::firewall::(busy)::installing EZ Stream."
 	apt update
 	apt install ezstream
 else
-	echo "dp::euterpe::icecast::(skip)::skipping EZ Stream installation."
+	echo "dp::euterpe::server::icecast::(skip)::skipping EZ Stream installation."
 fi
 
 # prepare configs
-echo "dp::euterpe::icecast::(busy)::preparing Euterpe Icecast configuration files."
+echo "dp::euterpe::server::icecast::(busy)::preparing Euterpe Icecast configuration files."
 cd icecast
 rm _*.conf
 for file in *.conf
@@ -47,7 +48,7 @@ do
 done
 cd $root_dir
 
-echo "dp::euterpe::ez::(busy)::preparing Euterpe EZ configuration files."
+echo "dp::euterpe::server::ez::(busy)::preparing Euterpe EZ configuration files."
 cd ez
 rm _*.conf
 for file in *.conf
@@ -60,7 +61,7 @@ do
 done
 cd $root_dir
 
-echo "dp::euterpe::firewall::(busy)::preparing DreamWAF configuration files."
+echo "dp::euterpe::server::firewall::(busy)::preparing DreamWAF configuration files."
 cd firewall
 rm _*.conf
 for file in *.conf
@@ -76,30 +77,30 @@ cd $root_dir
 # copy files
 mnt_dir="/mnt/audio-archive"
 if [ -d "$mnt_dir" ]; then
-	echo "dp::euterpe::ez::(busy)::copying configs to mnt."
+	echo "dp::euterpe::server::ez::(busy)::copying configs to mnt."
 	cp ez/_*.conf $mnt_dir
 else
-	echo "dp::euterpe::ez::(error)::audio-archive is not mounted."
+	echo "dp::euterpe::server::ez::(error)::audio-archive is not mounted."
 	exit 1;
 fi
 
 firewall_dir="/etc/fail2ban"
 if [ -d "$firewall_dir" ]; then
-	echo "dp::euterpe::firewall::(busy)::copying configs to fail2ban."
+	echo "dp::euterpe::server::firewall::(busy)::copying configs to fail2ban."
 	cd firewall
 	cp _dp-patience.local "$firewall_dir/jail.d/dp-patience.local"
 	cp _dp-patience.conf "$firewall_dir/filter.d/dp-patience.conf"
 else
-	echo "dp::euterpe::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
+	echo "dp::euterpe::server::firewall::(error)::fail2ban seems to still be missing ::mystery-tune-plays::."
 	exit 1;
 fi
 cd $root_dir
 
 daemon_dir="/etc/systemd/system"
 if [ -d "$daemon_dir" ]; then
-	echo "dp::euterpe::systemd::(busy)::copying daemons to systemd."
-	cd $daemon_dir
-	for file in *.conf
+	echo "dp::euterpe::server::systemd::(busy)::copying daemons to systemd."
+	cd daemon
+	for file in *.service
 	do
 		cp $file $daemon_dir
 		systemctl enable $file
@@ -107,13 +108,13 @@ if [ -d "$daemon_dir" ]; then
 		systemctl start $file
 	done
 else
-	echo "dp::euterpe::systemd::(error)::this os systemd dir might be different."
+	echo "dp::euterpe::server::systemd::(error)::this os systemd dir might be different."
 	exit 1;
 fi
 cd $root_dir
 
 # make a playlist
-echo "dp::euterpe::vibes::(busy)::making a playlist."
+echo "dp::euterpe::server::vibes::(busy)::making a playlist."
 cp static/* $mnt_dir
 cd $mnt_dir
 find -type f -iname "jingle.mp3" > playlist-base.m3u
@@ -145,4 +146,4 @@ cd $root_dir
 # sed -i ./icecast/default.conf s/EUTERPE_SERVER_CHANNELS_NUM/$EUTERPE_SERVER_CHANNELS_NUM/g
 
 echo -e "\033[0;62m\033[0;49;32m"
-echo "dp::euterpe::(idle)::all good."
+echo "dp::euterpe::server::(idle)::all good."

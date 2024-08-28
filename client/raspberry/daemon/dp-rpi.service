@@ -1,0 +1,20 @@
+# /etc/systemd/system/dp-rpi.service
+
+[Unit]
+Description=DreamPip RPI Client
+Requires=icecast2.service
+After=icecast2.service
+
+[Service]
+User=root
+Type=simple
+RemainAfterExit=yes
+WorkingDirectory=/home/pi/euterpe/client/raspberry
+ExecStart=echo "dp::euterpe::raspberry::vibes::(busy)::starting to broadcast from device." && sudo /usr/bin/darkice -c ./darkice/dp-rpi.cfg && echo "dp::euterpe::vibes::(active)::DreamPip RPI Client Started"
+ExecStop=echo "dp::euterpe::darkice::(active)::DreamPip RPI Client Stopped"
+TimeoutStartSec=0
+Restart=always
+StartLimitIntervalSec=60
+StartLimitBurst=3
+[Install]
+WantedBy=multi-user.target
