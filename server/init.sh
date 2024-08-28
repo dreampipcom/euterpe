@@ -16,7 +16,7 @@ else
 	echo "dp::euterpe::server::firewall::(skip)::skipping fail2ban installation."
 fi
 
-echo "dp::euterpe::server::icecast::(busy)::preparing Icecast."
+echo "dp::euterpe::server::icecast::(busy)::preparing DreamAudioCastServer."
 if [ "$(which icecast2)" == "" ]; then
 	echo "dp::euterpe::server::firewall::(busy)::installing Icecast."
 	apt update
@@ -25,7 +25,7 @@ else
 	echo "dp::euterpe::server::icecast::(skip)::skipping Icecast installation."
 fi
 
-echo "dp::euterpe::server::ez::(busy)::preparing EZ."
+echo "dp::euterpe::server::ez::(busy)::preparing DreamRandomCast."
 if [ "$(which ezstream)" == "" ]; then
 	echo "dp::euterpe::server::firewall::(busy)::installing EZ Stream."
 	apt update
@@ -34,8 +34,20 @@ else
 	echo "dp::euterpe::server::icecast::(skip)::skipping EZ Stream installation."
 fi
 
+echo "dp::euterpe::server::archive::(busy)::preparing DreamBucketFuse."
+if [ "$(which /usr/bin/rclone)" == "" ]; then
+	echo "dp::euterpe::server::archive::(busy)::installing GCP Fuse."
+	export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
+	echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
+	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.asc
+	apt update
+	apt install gcsfuse
+else
+	echo "dp::euterpe::server::icecast::(skip)::skipping EZ Stream installation."
+fi
+
 # prepare daemons
-echo "dp::euterpe::server::gcp-fuse::(busy)::preparing GCP Fuse."
+echo "dp::euterpe::server::archive::(busy)::preparing GCP Fuse."
 cd daemon
 rm _*.service
 origin="dp-audio-archive.service.template"
