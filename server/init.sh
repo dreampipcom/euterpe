@@ -44,6 +44,8 @@ tmpfile=$(mktemp)
 cp -p $origin $tmpfile
 cat $origin | envsubst > $tmpfile && mv $tmpfile $destination
 cd $root_dir
+# to-do: add GCP auth config setup.
+# [DPTM-10]: https://www.notion.so/angeloreale/Euterpe-Finish-Server-GCP-init-script-465c147d63d54511867e553b8aeb1057?pvs=4
 
 # prepare configs
 echo "dp::euterpe::server::icecast::(busy)::preparing Euterpe Icecast configuration files."
