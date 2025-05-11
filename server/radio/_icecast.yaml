@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: icecast
+  namespace: euterpe
+  labels:
+    app: icecast
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: icecast
+  template:
+    metadata:
+      labels:
+        app: icecast
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+      - name: icecast
+        image: vimagick/icecast:latest
+        ports:
+        - containerPort: 8000
+          name: icecast
+        livenessProbe:
+          httpGet:
+            path: /status.xsl
+            port: icecast
+        readinessProbe:
+          httpGet:
+            path: /status.xsl
+            port: icecast
+        volumeMounts:
+        - name: config
+          mountPath: /etc/icecast.xml
+          subPath: icecast.xml
+        - name: config
+          mountPath: /usr/share/icecast
+        - name: config
+          mountPath: /var/log/icecast/access.log
+          subPath: access.log
+        - name: config
+          mountPath: /var/log/icecast/error.log
+          subPath: error.log
+
+      volumes:
+      - name: config
+        configMap:
+          name: icecast-config
