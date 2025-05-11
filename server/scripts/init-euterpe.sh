@@ -74,5 +74,11 @@ tmpfile=$(mktemp --tmpdir=.)
 cp -p $origin $tmpfile
 cat $origin | envsubst > $tmpfile && mv $tmpfile $destination
 
+origin="./_icecast-ingress.yaml"
+destination="./data/charts/icecast-ingress.yaml"
+tmpfile=$(mktemp --tmpdir=.)
+cp -p $origin $tmpfile
+cat $origin | envsubst > $tmpfile && mv $tmpfile $destination
+
 
 log "dp::janus::${EUTERPE_ENV}::ingress::(idle)::all good." 0
